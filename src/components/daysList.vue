@@ -34,7 +34,7 @@
     <div class="card w-50" v-if="checked">
       <h3>Sunday</h3>
       <div class="time-row">
-        <select class="m-md-2" name="" id="dropdown-1">
+        <select v-model="time" class="m-md-2" name="" id="dropdown-1">
           <option>12:00 AM</option>
           <option>01:00 AM</option>
           <option>02:00 AM</option>
@@ -60,7 +60,7 @@
           <option>10:00 PM</option>
           <option>11:00 PM</option>
         </select>
-        <select class="m-md-2" name="" id="dropdown-1">
+        <select v-model="time2" class="m-md-2" name="" id="dropdown-1">
           <option>12:00 AM</option>
           <option>01:00 AM</option>
           <option>02:00 AM</option>
@@ -92,7 +92,7 @@
         <div class="time-list">
           <ul>
             <li v-for="(time, index) in times" v-bind:key="time.id">
-              {{ time }}
+              {{ time }} - {{ time2 }}
 
               <button @click="deleteTime(index)">X</button>
             </li>
@@ -110,7 +110,8 @@ export default {
     return {
       checked: false,
       time: "",
-      times: ["10:00 AM", "12:00AM"],
+      time2: "",
+      times: [],
     };
   },
   methods: {
