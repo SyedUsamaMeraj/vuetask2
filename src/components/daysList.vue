@@ -32,8 +32,6 @@ export default {
       timeCard: undefined,
       days: [],
       selectedDay: "",
-      startTime: "",
-      endTime: "",
       daylist: [
         "Sunday",
         "Monday",

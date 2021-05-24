@@ -6,7 +6,7 @@
       </b-card-text>
       <div class="time-row">
         <div class="time-checkbox">
-          <select v-model="time" class="m-md-2 select" id="dropdown-1">
+          <select v-model="startTime" class="m-md-2 select" id="dropdown-1">
             <option selected disabled>Choose a time</option>
             <option>12:00 AM</option>
             <option>01:00 AM</option>
@@ -33,7 +33,7 @@
             <option>10:00 PM</option>
             <option>11:00 PM</option>
           </select>
-          <select v-model="time2" class="m-md-2 select" id="dropdown-1">
+          <select v-model="endTime" class="m-md-2 select" id="dropdown-1">
             <option selected disabled>Choose a time</option>
             <option>12:00 AM</option>
             <option>01:00 AM</option>
@@ -69,7 +69,7 @@
       <div class="time-list">
         <ul>
           <li v-for="(time, index) in times" v-bind:key="time.id">
-            {{ time }}
+            <h5>{{ time }}</h5>
 
             <button @click="deleteTime(index)">X</button>
           </li>
@@ -84,14 +84,14 @@ export default {
   props: ["selectedDay"],
   data() {
     return {
-      time: "",
-      time2: "",
+      startTime: "",
+      endTime: "",
       times: [],
     };
   },
   methods: {
     submitTime() {
-      this.times.push(this.time + " - " + this.time2);
+      this.times.push(this.startTime + " - " + this.endTime);
     },
     deleteTime(index) {
       this.times.splice(index, 1);
