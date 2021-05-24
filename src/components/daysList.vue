@@ -18,6 +18,7 @@
       >
         <h4>{{ selectedDay }}</h4>
         <time-card></time-card>
+    
       </div>
     </div>
   </div>
