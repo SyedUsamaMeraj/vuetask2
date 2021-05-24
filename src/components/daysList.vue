@@ -1,126 +1,47 @@
 <template>
   <div id="daysList">
     <div class="mb-5 checkboxes">
-      <div class="checkbox">
-        <b-form-checkbox size="lg" v-model="checked"></b-form-checkbox>
-        <h6>Sunday</h6>
-      </div>
-      <div class="checkbox">
-        <b-form-checkbox size="lg"></b-form-checkbox>
-        <h6>Monday</h6>
-      </div>
-      <div class="checkbox">
-        <b-form-checkbox size="lg"></b-form-checkbox>
-        <h6>Tuesday</h6>
-      </div>
-      <div class="checkbox">
-        <b-form-checkbox size="lg"></b-form-checkbox>
-        <h6>Wednesday</h6>
-      </div>
-      <div class="checkbox">
-        <b-form-checkbox size="lg"></b-form-checkbox>
-        <h6>Thursday</h6>
-      </div>
-      <div class="checkbox">
-        <b-form-checkbox size="lg"></b-form-checkbox>
-        <h6>Friday</h6>
-      </div>
-      <div class="checkbox">
-        <b-form-checkbox size="lg"></b-form-checkbox>
-        <h6>Saturday</h6>
-      </div>
+      <ul>
+        <li v-for="day in daylist" v-bind:key="day.id">
+          <b-form-checkbox size="lg" v-bind:value="day" v-model="days">{{
+            day
+          }}</b-form-checkbox>
+        </li>
+      </ul>
     </div>
 
-    <div class="card w-50" v-if="checked">
-      <h3>Sunday</h3>
-      <div class="time-row">
-        <select v-model="time" class="m-md-2" name="" id="dropdown-1">
-          <option>12:00 AM</option>
-          <option>01:00 AM</option>
-          <option>02:00 AM</option>
-          <option>03:00 AM</option>
-          <option>04:00 AM</option>
-          <option>05:00 AM</option>
-          <option>06:00 AM</option>
-          <option>07:00 AM</option>
-          <option>08:00 AM</option>
-          <option>09:00 AM</option>
-          <option>10:00 AM</option>
-          <option>11:00 AM</option>
-          <option>12:00 PM</option>
-          <option>01:00 PM</option>
-          <option>02:00 PM</option>
-          <option>03:00 PM</option>
-          <option>04:00 PM</option>
-          <option>05:00 PM</option>
-          <option>06:00 PM</option>
-          <option>07:00 PM</option>
-          <option>08:00 PM</option>
-          <option>09:00 PM</option>
-          <option>10:00 PM</option>
-          <option>11:00 PM</option>
-        </select>
-        <select v-model="time2" class="m-md-2" name="" id="dropdown-1">
-          <option>12:00 AM</option>
-          <option>01:00 AM</option>
-          <option>02:00 AM</option>
-          <option>03:00 AM</option>
-          <option>04:00 AM</option>
-          <option>05:00 AM</option>
-          <option>06:00 AM</option>
-          <option>07:00 AM</option>
-          <option>08:00 AM</option>
-          <option>09:00 AM</option>
-          <option>10:00 AM</option>
-          <option>11:00 AM</option>
-          <option>12:00 PM</option>
-          <option>01:00 PM</option>
-          <option>02:00 PM</option>
-          <option>03:00 PM</option>
-          <option>04:00 PM</option>
-          <option>05:00 PM</option>
-          <option>06:00 PM</option>
-          <option>07:00 PM</option>
-          <option>08:00 PM</option>
-          <option>09:00 PM</option>
-          <option>10:00 PM</option>
-          <option>11:00 PM</option>
-        </select>
-        <div class="btn-row">
-          <b-button variant="success" @click="submitTime">Add Time</b-button>
-        </div>
-        <div class="time-list">
-          <ul>
-            <li v-for="(time, index) in times" v-bind:key="time.id">
-              {{ time }} - {{ time2 }}
-
-              <button @click="deleteTime(index)">X</button>
-            </li>
-          </ul>
-        </div>
+    <div class="cardsList flex">
+      <div
+        class="cards"
+        v-for="selectedDay in days"
+        v-bind:key="selectedDay.id"
+      >
+        <h4>{{ selectedDay }}</h4>
+        <time-card></time-card>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import timeCard from "./timeCard.vue";
 export default {
-  components: {},
+  components: { "time-card": timeCard },
   data() {
     return {
-      checked: false,
-      time: "",
-      time2: "",
-      times: [],
+      timeCard: undefined,
+      days: [],
+      selectedDay: "",
+      daylist: [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ],
     };
-  },
-  methods: {
-    submitTime() {
-      this.times.push(this.time);
-    },
-    deleteTime(index) {
-      this.times.splice(index, 1);
-    },
   },
 };
 </script>
@@ -131,6 +52,10 @@ export default {
   justify-content: space-evenly;
   border: 1px solid #000;
 }
+.checkboxes ul li {
+  display: inline-block;
+  margin-right: 30px;
+}
 .checkbox {
   display: flex;
   flex-direction: column;
@@ -138,10 +63,10 @@ export default {
   margin-right: 10px;
   text-align: center;
 }
-.time-row {
-  padding: 10px 15px;
-}
-.btn-row {
-  text-align: right;
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 </style>
