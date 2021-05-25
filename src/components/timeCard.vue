@@ -2,7 +2,7 @@
   <div id="timeCard">
     <b-card tag="article" style="max-width: 40rem" class="mb-2">
       <b-card-text>
-        {{ selectedDay }}
+        {{ day }}
       </b-card-text>
       <div class="time-row">
         <div class="time-checkbox">
@@ -62,11 +62,11 @@
           </select>
         </div>
 
-        <div class="mb-5 btn-row">
+        <div class="mb-3 mt-2 btn-row">
           <b-button variant="success" @click="submitTime">Add Time</b-button>
         </div>
       </div>
-      <div class="time-list">
+      <div class="time-list mt-2">
         <ul>
           <li v-for="(time, index) in times" v-bind:key="time.id">
             <h5>{{ time }}</h5>
@@ -81,7 +81,7 @@
 
 <script>
 export default {
-  props: ["selectedDay"],
+  props: ["day"],
   data() {
     return {
       startTime: "",

@@ -1,11 +1,14 @@
 <template>
   <div id="daysList">
-    <div class="mb-5 checkboxes">
+    <div class="mb-5 checkbox-container">
       <ul>
-        <li v-for="day in daylist" v-bind:key="day.id">
-          <b-form-checkbox size="lg" v-bind:value="day" v-model="days">{{
-            day
-          }}</b-form-checkbox>
+        <li v-for="day in daylist" v-bind:key="day.id" class="mt-3">
+          <b-form-checkbox
+            size="lg"
+            v-bind:value="day"
+            v-model="selectedDays"
+            >{{ day }}</b-form-checkbox
+          >
         </li>
       </ul>
     </div>
@@ -13,10 +16,10 @@
     <div class="cardsList flex">
       <div
         class="cards"
-        v-for="selectedDay in days"
-        v-bind:key="selectedDay.id"
+        v-for="day in selectedDays"
+        v-bind:key="day.id"
       >
-        <h4>{{ selectedDay }}</h4>
+        <h4>{{ day }}</h4>
         <time-card></time-card>
       </div>
     </div>
@@ -26,12 +29,11 @@
 <script>
 import timeCard from "./timeCard.vue";
 export default {
-  components: { "time-card": timeCard },
+  components: { timeCard },
   data() {
     return {
-      timeCard: undefined,
-      days: [],
-      selectedDay: "",
+      selectedDays: [],
+      day: "",
       daylist: [
         "Sunday",
         "Monday",
@@ -47,12 +49,12 @@ export default {
 </script>
 
 <style scoped>
-.checkboxes {
+.checkbox-container {
   display: flex;
   justify-content: space-evenly;
   border: 1px solid #000;
 }
-.checkboxes ul li {
+.checkbox-container ul li {
   display: inline-block;
   margin-right: 30px;
 }
