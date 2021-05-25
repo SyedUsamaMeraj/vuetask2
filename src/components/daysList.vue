@@ -2,23 +2,16 @@
   <div id="daysList">
     <div class="mb-5 checkbox-container">
       <ul>
-        <li v-for="day in daylist" v-bind:key="day.id" class="mt-3">
-          <b-form-checkbox
-            size="lg"
-            v-bind:value="day"
-            v-model="selectedDays"
-            >{{ day }}</b-form-checkbox
-          >
+        <li v-for="day in daylist" :key="day.id" class="mt-3">
+          <b-form-checkbox size="lg" :value="day" v-model="selectedDays">{{
+            day
+          }}</b-form-checkbox>
         </li>
       </ul>
     </div>
 
     <div class="cardsList flex">
-      <div
-        class="cards"
-        v-for="day in selectedDays"
-        v-bind:key="day.id"
-      >
+      <div class="cards" v-for="day in selectedDays" :key="day.id">
         <h4>{{ day }}</h4>
         <time-card></time-card>
       </div>
