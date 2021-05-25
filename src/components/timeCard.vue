@@ -68,7 +68,7 @@
       </div>
       <div class="time-list mt-2">
         <ul>
-          <li v-for="(time, index) in times" v-bind:key="time.id">
+          <li v-for="(time, index) in times" :key="time.id">
             <h5>{{ time }}</h5>
 
             <button @click="deleteTime(index)">X</button>
