@@ -10,7 +10,7 @@
       </ul>
     </div>
 
-    <div class="cardsList flex">
+    <div class="flex cardsList">
       <div class="cards" v-for="day in selectedDays" :key="day.id">
         <h4>{{ day }}</h4>
         <time-card></time-card>

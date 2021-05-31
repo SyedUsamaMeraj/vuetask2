@@ -1,76 +1,103 @@
 <template>
   <div id="timeCard">
     <b-card tag="article" style="max-width: 40rem" class="mb-2">
-      <b-card-text>
-        {{ day }}
-      </b-card-text>
+      <b-card-text> </b-card-text>
       <div class="time-row">
         <div class="time-checkbox">
-          <select v-model="startTime" class="m-md-2 select" id="dropdown-1">
+          <select
+            v-model="startTime"
+            class="m-md-2 select"
+            id="startTime"
+            required
+          >
             <option selected disabled>Choose a time</option>
-            <option>12:00 AM</option>
-            <option>01:00 AM</option>
-            <option>02:00 AM</option>
-            <option>03:00 AM</option>
-            <option>04:00 AM</option>
-            <option>05:00 AM</option>
-            <option>06:00 AM</option>
-            <option>07:00 AM</option>
-            <option>08:00 AM</option>
-            <option>09:00 AM</option>
-            <option>10:00 AM</option>
-            <option>11:00 AM</option>
-            <option>12:00 PM</option>
-            <option>01:00 PM</option>
-            <option>02:00 PM</option>
-            <option>03:00 PM</option>
-            <option>04:00 PM</option>
-            <option>05:00 PM</option>
-            <option>06:00 PM</option>
-            <option>07:00 PM</option>
-            <option>08:00 PM</option>
-            <option>09:00 PM</option>
-            <option>10:00 PM</option>
-            <option>11:00 PM</option>
+            <option value=""></option>
+            <option>00:00</option>
+            <option>01:00</option>
+            <option>02:00</option>
+            <option>03:00</option>
+            <option>04:00</option>
+            <option>05:00</option>
+            <option>06:00</option>
+            <option>07:00</option>
+            <option>08:00</option>
+            <option>09:00</option>
+            <option>10:00</option>
+            <option>11:00</option>
+            <option>12:00</option>
+            <option>13:00</option>
+            <option>14:00</option>
+            <option>15:00</option>
+            <option>16:00</option>
+            <option>17:00</option>
+            <option>18:00</option>
+            <option>19:00</option>
+            <option>20:00</option>
+            <option>21:00</option>
+            <option>22:00</option>
+            <option>23:00</option>
           </select>
-          <select v-model="endTime" class="m-md-2 select" id="dropdown-1">
+          <select
+            v-model="endTime"
+            class="m-md-2 select"
+            id="endTime"
+            :class="{ disabled: selectDisabled }"
+            :disabled="selectDisabled"
+            required
+          >
             <option selected disabled>Choose a time</option>
-            <option>12:00 AM</option>
-            <option>01:00 AM</option>
-            <option>02:00 AM</option>
-            <option>03:00 AM</option>
-            <option>04:00 AM</option>
-            <option>05:00 AM</option>
-            <option>06:00 AM</option>
-            <option>07:00 AM</option>
-            <option>08:00 AM</option>
-            <option>09:00 AM</option>
-            <option>10:00 AM</option>
-            <option>11:00 AM</option>
-            <option>12:00 PM</option>
-            <option>01:00 PM</option>
-            <option>02:00 PM</option>
-            <option>03:00 PM</option>
-            <option>04:00 PM</option>
-            <option>05:00 PM</option>
-            <option>06:00 PM</option>
-            <option>07:00 PM</option>
-            <option>08:00 PM</option>
-            <option>09:00 PM</option>
-            <option>10:00 PM</option>
-            <option>11:00 PM</option>
+            <option value=""></option>
+            <option>00:00</option>
+            <option>01:00</option>
+            <option>02:00</option>
+            <option>03:00</option>
+            <option>04:00</option>
+            <option>05:00</option>
+            <option>06:00</option>
+            <option>07:00</option>
+            <option>08:00</option>
+            <option>09:00</option>
+            <option>10:00</option>
+            <option>11:00</option>
+            <option>12:00</option>
+            <option>13:00</option>
+            <option>14:00</option>
+            <option>15:00</option>
+            <option>16:00</option>
+            <option>17:00</option>
+            <option>18:00</option>
+            <option>19:00</option>
+            <option>20:00</option>
+            <option>21:00</option>
+            <option>22:00</option>
+            <option>23:00</option>
           </select>
         </div>
 
-        <div class="mb-3 mt-2 btn-row">
-          <b-button variant="success" @click="submitTime">Add Time</b-button>
+        <div class="mt-2 mb-3 btn-row">
+          <b-button
+            variant="success"
+            @click="submitTime()"
+            :class="{ disabled: buttonDisabled }"
+            :disabled="buttonDisabled"
+            >Add Time</b-button
+          >
         </div>
       </div>
-      <div class="time-list mt-2">
+      <div class="mt-2 time-list">
+        <div class="alert-msg">
+          <b-alert show dismissible v-if="msg">
+            {{ msg }}
+          </b-alert>
+        </div>
+        <div class="alert-msg">
+          <b-alert variant="warning" show dismissible v-if="invalidTime">
+            {{ invalidTime }}
+          </b-alert>
+        </div>
         <ul>
           <li v-for="(time, index) in times" :key="time.id">
             <h5>{{ time }}</h5>
-
             <button @click="deleteTime(index)">X</button>
           </li>
         </ul>
@@ -81,20 +108,50 @@
 
 <script>
 export default {
-  props: ["day"],
   data() {
     return {
       startTime: "",
       endTime: "",
       times: [],
+      msg: "",
+      invalidTime: "",
     };
   },
   methods: {
     submitTime() {
-      this.times.push(this.startTime + " - " + this.endTime);
+      if (this.times.includes(this.startTime + " - " + this.endTime)) {
+        this.msg = "Time Already Exists";
+        this.invalidTime = "";
+      } else if (
+        this.startTime > this.endTime ||
+        this.startTime == this.endTime
+      ) {
+        this.invalidTime = "Invalid Time Selected";
+        this.msg = "";
+      } else {
+        this.times.push(this.startTime + " - " + this.endTime);
+        this.msg = "";
+        this.invalidTime = "";
+      }
     },
     deleteTime(index) {
       this.times.splice(index, 1);
+    },
+  },
+  computed: {
+    selectDisabled() {
+      if (this.startTime.length > 1) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    buttonDisabled() {
+      if (this.startTime.length > 1 && this.endTime.length > 1) {
+        return false;
+      } else {
+        return true;
+      }
     },
   },
 };
@@ -167,5 +224,12 @@ select {
 }
 .time-list ul {
   width: 100%;
+}
+.asc:after {
+  content: "\25B2";
+}
+
+.desc:after {
+  content: "\25BC";
 }
 </style>
