@@ -5,72 +5,34 @@
       <div class="time-row">
         <div class="time-checkbox">
           <select
-            v-model="startTime"
+            v-model="addTime.startTime"
             class="m-md-2 select"
             id="startTime"
             required
           >
-            <option selected disabled>Choose a time</option>
-            <option value=""></option>
-            <option>00:00</option>
-            <option>01:00</option>
-            <option>02:00</option>
-            <option>03:00</option>
-            <option>04:00</option>
-            <option>05:00</option>
-            <option>06:00</option>
-            <option>07:00</option>
-            <option>08:00</option>
-            <option>09:00</option>
-            <option>10:00</option>
-            <option>11:00</option>
-            <option>12:00</option>
-            <option>13:00</option>
-            <option>14:00</option>
-            <option>15:00</option>
-            <option>16:00</option>
-            <option>17:00</option>
-            <option>18:00</option>
-            <option>19:00</option>
-            <option>20:00</option>
-            <option>21:00</option>
-            <option>22:00</option>
-            <option>23:00</option>
+            <option
+              v-for="time in timeList"
+              :key="time.id"
+              :value="{ value: time.value, label: time.label }"
+            >
+              {{ time.label }}
+            </option>
           </select>
           <select
-            v-model="endTime"
+            v-model="addTime.endTime"
             class="m-md-2 select"
             id="endTime"
             :class="{ disabled: selectDisabled }"
             :disabled="selectDisabled"
             required
           >
-            <option selected disabled>Choose a time</option>
-            <option value=""></option>
-            <option>00:00</option>
-            <option>01:00</option>
-            <option>02:00</option>
-            <option>03:00</option>
-            <option>04:00</option>
-            <option>05:00</option>
-            <option>06:00</option>
-            <option>07:00</option>
-            <option>08:00</option>
-            <option>09:00</option>
-            <option>10:00</option>
-            <option>11:00</option>
-            <option>12:00</option>
-            <option>13:00</option>
-            <option>14:00</option>
-            <option>15:00</option>
-            <option>16:00</option>
-            <option>17:00</option>
-            <option>18:00</option>
-            <option>19:00</option>
-            <option>20:00</option>
-            <option>21:00</option>
-            <option>22:00</option>
-            <option>23:00</option>
+            <option
+              v-for="time in timeList"
+              :key="time.id"
+              :value="{ value: time.value, label: time.label }"
+            >
+              {{ time.label }}
+            </option>
           </select>
         </div>
 
@@ -86,18 +48,18 @@
       </div>
       <div class="mt-2 time-list">
         <div class="alert-msg">
-          <b-alert show dismissible v-if="msg">
-            {{ msg }}
+          <b-alert variant="danger" show dismissible v-if="sameTime">
+            {{ errorMessage }}
           </b-alert>
         </div>
         <div class="alert-msg">
           <b-alert variant="warning" show dismissible v-if="invalidTime">
-            {{ invalidTime }}
+            {{ errorMessage }}
           </b-alert>
         </div>
         <ul>
           <li v-for="(time, index) in times" :key="time.id">
-            <h5>{{ time }}</h5>
+            <h5>{{ time.startTime + " - " + time.endTime }}</h5>
             <button @click="deleteTime(index)">X</button>
           </li>
         </ul>
@@ -111,27 +73,71 @@ export default {
   data() {
     return {
       startTime: "",
-      endTime: "",
+      addTime: {
+        startTime: [{ value: "", label: "" }],
+        endTime: [{ value: "", label: "" }],
+      },
       times: [],
-      msg: "",
-      invalidTime: "",
+      errorMessage: "",
+      invalidTime: false,
+      sameTime: false,
+      timeList: [
+        { value: "", label: "Choose A Time" },
+        { value: 0, label: "12:00 AM" },
+        { value: 1, label: "01:00 AM" },
+        { value: 2, label: "02:00 AM" },
+        { value: 3, label: "03:00 AM" },
+        { value: 4, label: "04:00 AM" },
+        { value: 5, label: "05:00 AM" },
+        { value: 6, label: "06:00 AM" },
+        { value: 7, label: "07:00 AM" },
+        { value: 8, label: "08:00 AM" },
+        { value: 9, label: "09:00 AM" },
+        { value: 10, label: "10:00 AM" },
+        { value: 11, label: "11:00 AM" },
+        { value: 12, label: "12:00 PM" },
+        { value: 13, label: "01:00 PM" },
+        { value: 14, label: "02:00 PM" },
+        { value: 15, label: "03:00 PM" },
+        { value: 16, label: "04:00 PM" },
+        { value: 17, label: "05:00 PM" },
+        { value: 18, label: "06:00 PM" },
+        { value: 19, label: "07:00 PM" },
+        { value: 20, label: "08:00 PM" },
+        { value: 21, label: "09:00 PM" },
+        { value: 22, label: "10:00 PM" },
+        { value: 23, label: "11:00 PM" },
+      ],
     };
   },
   methods: {
+    checkForExistance() {
+      return this.times.find(
+        (item) =>
+          item.startTime === this.addTime.startTime.value &&
+          item.endTime === this.addTime.endTime.value
+      );
+    },
     submitTime() {
-      if (this.times.includes(this.startTime + " - " + this.endTime)) {
-        this.msg = "Time Already Exists";
-        this.invalidTime = "";
+      if (this.checkForExistance() !== undefined) {
+        this.errorMessage = "Time Already Exists";
+        this.sameTime = true;
+        this.invalidTime = false;
       } else if (
-        this.startTime > this.endTime ||
-        this.startTime == this.endTime
+        this.addTime.startTime.value > this.addTime.endTime.value ||
+        this.addTime.startTime.value === this.addTime.endTime.value
       ) {
-        this.invalidTime = "Invalid Time Selected";
-        this.msg = "";
+        this.errorMessage = "Invalid Time Selected";
+        this.invalidTime = true;
+        this.sameTime = false;
       } else {
-        this.times.push(this.startTime + " - " + this.endTime);
-        this.msg = "";
-        this.invalidTime = "";
+        this.times.push({
+          startTime: this.addTime.startTime.value,
+          endTime: this.addTime.endTime.value,
+        });
+        this.errorMessage = "";
+        this.invalidTime = false;
+        this.sameTime = false;
       }
     },
     deleteTime(index) {
@@ -140,14 +146,17 @@ export default {
   },
   computed: {
     selectDisabled() {
-      if (this.startTime.length > 1) {
+      if (this.addTime.startTime.length > 1) {
         return false;
       } else {
         return true;
       }
     },
     buttonDisabled() {
-      if (this.startTime.length > 1 && this.endTime.length > 1) {
+      if (
+        this.addTime.startTime.length > 1 &&
+        this.addTime.endTime.length > 1
+      ) {
         return false;
       } else {
         return true;
@@ -225,11 +234,10 @@ select {
 .time-list ul {
   width: 100%;
 }
-.asc:after {
-  content: "\25B2";
+select:disabled {
+  pointer-events: none;
 }
-
-.desc:after {
-  content: "\25BC";
+.disabled select {
+  pointer-events: none;
 }
 </style>
