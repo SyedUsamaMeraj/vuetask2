@@ -72,10 +72,9 @@
 export default {
   data() {
     return {
-      startTime: "",
       addTime: {
-        startTime: [{ value: "", label: "" }],
-        endTime: [{ value: "", label: "" }],
+        startTime: { value: "", label: "" },
+        endTime: { value: "", label: "" },
       },
       times: [],
       errorMessage: "",
@@ -146,7 +145,7 @@ export default {
   },
   computed: {
     selectDisabled() {
-      if (this.addTime.startTime.length > 1) {
+      if (this.addTime.startTime.label.length > 1) {
         return false;
       } else {
         return true;
@@ -154,8 +153,8 @@ export default {
     },
     buttonDisabled() {
       if (
-        this.addTime.startTime.length > 1 &&
-        this.addTime.endTime.length > 1
+        this.addTime.startTime.label.length > 1 &&
+        this.addTime.endTime.label.length > 1
       ) {
         return false;
       } else {
