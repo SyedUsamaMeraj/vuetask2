@@ -48,18 +48,21 @@
       </div>
       <div class="mt-2 time-list">
         <div class="alert-msg">
-          <b-alert variant="danger" show dismissible v-if="sameTime">
-            {{ errorMessage }}
-          </b-alert>
-        </div>
-        <div class="alert-msg">
-          <b-alert variant="warning" show dismissible v-if="invalidTime">
+          <b-alert
+            :variant="sameTime ? 'danger' : 'warning'"
+            show
+            dismissible
+            v-if="errorMessage"
+          >
             {{ errorMessage }}
           </b-alert>
         </div>
         <ul>
-          <li v-for="(time, index) in times" :key="time.id">
-            <h5>{{ time.startTime + " - " + time.endTime }}</h5>
+          <li v-for="time in times" :key="time.id">
+            <h2>
+              {{ `${getTime(time.startTime)} - ${getTime(time.endTime)}` }}
+            </h2>
+
             <button @click="deleteTime(index)">X</button>
           </li>
         </ul>
@@ -81,7 +84,7 @@ export default {
       invalidTime: false,
       sameTime: false,
       timeList: [
-        { value: "", label: "Choose A Time" },
+        { value: null, label: "Choose A Time" },
         { value: 0, label: "12:00 AM" },
         { value: 1, label: "01:00 AM" },
         { value: 2, label: "02:00 AM" },
@@ -110,6 +113,22 @@ export default {
     };
   },
   methods: {
+    getTime(time) {
+      let addedTime = time;
+      console.log(addedTime);
+      let prefix = "AM";
+      let hours = addedTime;
+      if (hours >= 12) {
+        hours = addedTime - 12;
+        prefix = "PM";
+      }
+
+      if (hours == 0) {
+        hours = 12;
+      }
+      let Datetime = hours + ": 00 " + prefix;
+      return Datetime;
+    },
     checkForExistance() {
       return this.times.find(
         (item) =>
@@ -124,7 +143,9 @@ export default {
         this.invalidTime = false;
       } else if (
         this.addTime.startTime.value > this.addTime.endTime.value ||
-        this.addTime.startTime.value === this.addTime.endTime.value
+        this.addTime.startTime.value === this.addTime.endTime.value ||
+        this.addTime.startTime.value === null ||
+        this.addTime.endTime.value === null
       ) {
         this.errorMessage = "Invalid Time Selected";
         this.invalidTime = true;
@@ -145,7 +166,10 @@ export default {
   },
   computed: {
     selectDisabled() {
-      if (this.addTime.startTime.label.length > 1) {
+      if (
+        this.addTime.startTime.label.length > 1 &&
+        this.addTime.startTime.value !== null
+      ) {
         return false;
       } else {
         return true;
@@ -154,7 +178,9 @@ export default {
     buttonDisabled() {
       if (
         this.addTime.startTime.label.length > 1 &&
-        this.addTime.endTime.label.length > 1
+        this.addTime.endTime.label.length > 1 &&
+        this.addTime.startTime.value !== null &&
+        this.addTime.endTime.value !== null
       ) {
         return false;
       } else {
