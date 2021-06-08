@@ -2,9 +2,9 @@
   <div id="daysList">
     <div class="mb-5 checkbox-container">
       <ul>
-        <li v-for="day in daylist" :key="day.id" class="mt-3">
+        <li v-for="day in daylist" :key="day.id" class="mt-3" :day="day">
           <b-form-checkbox size="lg" :value="day" v-model="selectedDays">{{
-            day
+            day.name
           }}</b-form-checkbox>
         </li>
       </ul>
@@ -12,7 +12,9 @@
 
     <div class="flex cardsList">
       <div class="cards" v-for="day in selectedDays" :key="day.id">
-        <h4>{{ day }}</h4>
+        <h4>
+          {{ day.name }}
+        </h4>
         <time-card></time-card>
       </div>
     </div>
@@ -28,15 +30,23 @@ export default {
       selectedDays: [],
       day: "",
       daylist: [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
+        { index: 1, name: "Sunday" },
+        { index: 2, name: "Monday" },
+        { index: 3, name: "Tuesday" },
+        { index: 4, name: "Wednesday" },
+        { index: 5, name: "Thursday" },
+        { index: 6, name: "Friday" },
+        { index: 7, name: "Saturday" },
       ],
     };
+  },
+  methods: {
+    addDays() {
+      this.selectedDays.push(
+        { index: this.daylist.index },
+        { name: this.daylist.name }
+      );
+    },
   },
 };
 </script>

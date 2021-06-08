@@ -13,7 +13,7 @@
             <option
               v-for="time in timeList"
               :key="time.id"
-              :value="{ value: time.value, label: time.label }"
+              :value="{ value: time.value  }"
             >
               {{ time.label }}
             </option>
@@ -58,7 +58,7 @@
           </b-alert>
         </div>
         <ul>
-          <li v-for="time in times" :key="time.id">
+          <li v-for="time in sort(times)" :key="time.id">
             <h2>
               {{ `${getTime(time.startTime)} - ${getTime(time.endTime)}` }}
             </h2>
@@ -113,6 +113,12 @@ export default {
     };
   },
   methods: {
+    sort: function (time) {
+      // Set slice() to avoid to generate an infinite loop!
+      return time.slice().sort(function (a, b) {
+        return a.startTime - b.startTime;
+      });
+    },
     getTime(time) {
       let addedTime = time;
       console.log(addedTime);
