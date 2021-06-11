@@ -1,7 +1,9 @@
 <template>
   <div id="timeCard">
     <b-card tag="article" style="max-width: 40rem" class="mb-2">
-      <b-card-text> </b-card-text>
+      <b-card-text
+        ><h4>{{ dayName }}</h4></b-card-text
+      >
       <div class="time-row">
         <div class="time-checkbox">
           <select
@@ -10,11 +12,7 @@
             id="startTime"
             required
           >
-            <option
-              v-for="time in timeList"
-              :key="time.id"
-              :value="{ value: time.value  }"
-            >
+            <option v-for="time in timeList" :key="time.id" :value="time.value">
               {{ time.label }}
             </option>
           </select>
@@ -26,11 +24,7 @@
             :disabled="selectDisabled"
             required
           >
-            <option
-              v-for="time in timeList"
-              :key="time.id"
-              :value="{ value: time.value, label: time.label }"
-            >
+            <option v-for="time in timeList" :key="time.id" :value="time.value">
               {{ time.label }}
             </option>
           </select>
@@ -58,11 +52,12 @@
           </b-alert>
         </div>
         <ul>
-          <li v-for="time in sort(times)" :key="time.id">
+          <li v-for="time in sortTime(times)" :key="time.id">
             <h2>
-              {{ `${getTime(time.startTime)} - ${getTime(time.endTime)}` }}
+              {{
+                `${convertTime(time.startTime)} - ${convertTime(time.endTime)}`
+              }}
             </h2>
-
             <button @click="deleteTime(index)">X</button>
           </li>
         </ul>
@@ -73,11 +68,16 @@
 
 <script>
 export default {
+  props: {
+    dayName: {
+      required: true,
+    },
+  },
   data() {
     return {
       addTime: {
-        startTime: { value: "", label: "" },
-        endTime: { value: "", label: "" },
+        startTime: { value: "" },
+        endTime: { value: "" },
       },
       times: [],
       errorMessage: "",
@@ -113,22 +113,29 @@ export default {
     };
   },
   methods: {
-    sort: function (time) {
-      // Set slice() to avoid to generate an infinite loop!
+    sortTime: function (time) {
       return time.slice().sort(function (a, b) {
-        return a.startTime - b.startTime;
+        if (a.startTime < b.startTime) {
+          return -1;
+        } else if (a.sameTime > b.sameTime) {
+          return 1;
+        } else if (a.endTime < b.endTime) {
+          return -1;
+        } else if (a.endTime > b.endTime) {
+          return 1;
+        } else {
+          return 0;
+        }
       });
     },
-    getTime(time) {
+    convertTime(time) {
       let addedTime = time;
-      console.log(addedTime);
       let prefix = "AM";
       let hours = addedTime;
       if (hours >= 12) {
         hours = addedTime - 12;
         prefix = "PM";
       }
-
       if (hours == 0) {
         hours = 12;
       }
@@ -138,8 +145,8 @@ export default {
     checkForExistance() {
       return this.times.find(
         (item) =>
-          item.startTime === this.addTime.startTime.value &&
-          item.endTime === this.addTime.endTime.value
+          item.startTime === this.addTime.startTime &&
+          item.endTime === this.addTime.endTime
       );
     },
     submitTime() {
@@ -148,18 +155,18 @@ export default {
         this.sameTime = true;
         this.invalidTime = false;
       } else if (
-        this.addTime.startTime.value > this.addTime.endTime.value ||
-        this.addTime.startTime.value === this.addTime.endTime.value ||
-        this.addTime.startTime.value === null ||
-        this.addTime.endTime.value === null
+        this.addTime.startTime > this.addTime.endTime ||
+        this.addTime.startTime === this.addTime.endTime ||
+        this.addTime.startTime === null ||
+        this.addTime.endTime === null
       ) {
         this.errorMessage = "Invalid Time Selected";
         this.invalidTime = true;
         this.sameTime = false;
       } else {
         this.times.push({
-          startTime: this.addTime.startTime.value,
-          endTime: this.addTime.endTime.value,
+          startTime: this.addTime.startTime,
+          endTime: this.addTime.endTime,
         });
         this.errorMessage = "";
         this.invalidTime = false;
@@ -173,8 +180,8 @@ export default {
   computed: {
     selectDisabled() {
       if (
-        this.addTime.startTime.label.length > 1 &&
-        this.addTime.startTime.value !== null
+        this.addTime.startTime !== null &&
+        this.addTime.startTime.value !== ""
       ) {
         return false;
       } else {
@@ -183,10 +190,10 @@ export default {
     },
     buttonDisabled() {
       if (
-        this.addTime.startTime.label.length > 1 &&
-        this.addTime.endTime.label.length > 1 &&
-        this.addTime.startTime.value !== null &&
-        this.addTime.endTime.value !== null
+        this.addTime.startTime !== null &&
+        this.addTime.endTime !== null &&
+        this.addTime.startTime.value !== "" &&
+        this.addTime.endTime.value !== ""
       ) {
         return false;
       } else {
@@ -239,7 +246,6 @@ select {
   color: #fff;
   cursor: pointer;
 }
-/* Arrow */
 .select::after {
   content: "\25BC";
   position: absolute;

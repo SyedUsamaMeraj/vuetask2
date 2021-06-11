@@ -2,7 +2,7 @@
   <div id="daysList">
     <div class="mb-5 checkbox-container">
       <ul>
-        <li v-for="day in daylist" :key="day.id" class="mt-3" :day="day">
+        <li v-for="day in daylist" :key="day.id" class="mt-3">
           <b-form-checkbox size="lg" :value="day" v-model="selectedDays">{{
             day.name
           }}</b-form-checkbox>
@@ -11,11 +11,8 @@
     </div>
 
     <div class="flex cardsList">
-      <div class="cards" v-for="day in selectedDays" :key="day.id">
-        <h4>
-          {{ day.name }}
-        </h4>
-        <time-card></time-card>
+      <div class="cards" v-for="day in sortDay(selectedDays)" :key="day.name">
+        <time-card :dayName="day.name"></time-card>
       </div>
     </div>
   </div>
@@ -28,22 +25,26 @@ export default {
   data() {
     return {
       selectedDays: [],
-      day: "",
       daylist: [
-        { index: 1, name: "Sunday" },
-        { index: 2, name: "Monday" },
-        { index: 3, name: "Tuesday" },
-        { index: 4, name: "Wednesday" },
-        { index: 5, name: "Thursday" },
-        { index: 6, name: "Friday" },
-        { index: 7, name: "Saturday" },
+        { value: 1, name: "Sunday" },
+        { value: 2, name: "Monday" },
+        { value: 3, name: "Tuesday" },
+        { value: 4, name: "Wednesday" },
+        { value: 5, name: "Thursday" },
+        { value: 6, name: "Friday" },
+        { value: 7, name: "Saturday" },
       ],
     };
   },
   methods: {
+    sortDay: function (day) {
+      return day.slice().sort(function (a, b) {
+        return a.value - b.value;
+      });
+    },
     addDays() {
       this.selectedDays.push(
-        { index: this.daylist.index },
+        { value: this.daylist.value },
         { name: this.daylist.name }
       );
     },
