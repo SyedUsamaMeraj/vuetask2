@@ -115,13 +115,9 @@ export default {
   methods: {
     sortTime: function (time) {
       return time.slice().sort(function (a, b) {
-        if (a.startTime < b.startTime) {
+        if (a.startTime < b.startTime || a.endTime < b.endTime) {
           return -1;
-        } else if (a.sameTime > b.sameTime) {
-          return 1;
-        } else if (a.endTime < b.endTime) {
-          return -1;
-        } else if (a.endTime > b.endTime) {
+        } else if (a.sameTime > b.sameTime || a.endTime > b.endTime) {
           return 1;
         } else {
           return 0;
