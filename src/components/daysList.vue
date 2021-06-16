@@ -20,20 +20,13 @@
 
 <script>
 import timeCard from "./timeCard.vue";
+import { daylist } from "../constants.js";
 export default {
   components: { timeCard },
   data() {
     return {
       selectedDays: [],
-      daylist: [
-        { value: 1, name: "Sunday" },
-        { value: 2, name: "Monday" },
-        { value: 3, name: "Tuesday" },
-        { value: 4, name: "Wednesday" },
-        { value: 5, name: "Thursday" },
-        { value: 6, name: "Friday" },
-        { value: 7, name: "Saturday" },
-      ],
+      daylist,
     };
   },
   methods: {
@@ -43,10 +36,10 @@ export default {
       });
     },
     addDays() {
-      this.selectedDays.push(
-        { value: this.daylist.value },
-        { name: this.daylist.name }
-      );
+      this.selectedDays.push({
+        value: this.daylist.value,
+        name: this.daylist.name,
+      });
     },
   },
 };

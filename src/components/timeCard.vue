@@ -67,6 +67,7 @@
 </template>
 
 <script>
+import { timeList } from "../constants.js";
 export default {
   props: {
     dayName: {
@@ -83,46 +84,20 @@ export default {
       errorMessage: "",
       invalidTime: false,
       sameTime: false,
-      timeList: [
-        { value: null, label: "Choose A Time" },
-        { value: 0, label: "12:00 AM" },
-        { value: 1, label: "01:00 AM" },
-        { value: 2, label: "02:00 AM" },
-        { value: 3, label: "03:00 AM" },
-        { value: 4, label: "04:00 AM" },
-        { value: 5, label: "05:00 AM" },
-        { value: 6, label: "06:00 AM" },
-        { value: 7, label: "07:00 AM" },
-        { value: 8, label: "08:00 AM" },
-        { value: 9, label: "09:00 AM" },
-        { value: 10, label: "10:00 AM" },
-        { value: 11, label: "11:00 AM" },
-        { value: 12, label: "12:00 PM" },
-        { value: 13, label: "01:00 PM" },
-        { value: 14, label: "02:00 PM" },
-        { value: 15, label: "03:00 PM" },
-        { value: 16, label: "04:00 PM" },
-        { value: 17, label: "05:00 PM" },
-        { value: 18, label: "06:00 PM" },
-        { value: 19, label: "07:00 PM" },
-        { value: 20, label: "08:00 PM" },
-        { value: 21, label: "09:00 PM" },
-        { value: 22, label: "10:00 PM" },
-        { value: 23, label: "11:00 PM" },
-      ],
+      timeList,
     };
   },
   methods: {
-    sortTime: function (time) {
-      return time.slice().sort(function (a, b) {
-        if (a.startTime < b.startTime || a.endTime < b.endTime) {
-          return -1;
-        } else if (a.sameTime > b.sameTime || a.endTime > b.endTime) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
+    sortTime(time) {
+      return time
+        .slice()
+        .sort((a, b) =>
+          a.startTime < b.startTime || a.endTime < b.endTime
+            ? -1
+            : a.sameTime > b.sameTime || a.endTime > b.endTime
+            ? 1
+            : 0
+        );
     },
     convertTime(time) {
       let addedTime = time;
@@ -175,26 +150,17 @@ export default {
   },
   computed: {
     selectDisabled() {
-      if (
-        this.addTime.startTime !== null &&
-        this.addTime.startTime.value !== ""
-      ) {
-        return false;
-      } else {
-        return true;
-      }
+      return (
+        this.addTime.startTime == null || this.addTime.startTime.value == ""
+      );
     },
     buttonDisabled() {
-      if (
-        this.addTime.startTime !== null &&
-        this.addTime.endTime !== null &&
-        this.addTime.startTime.value !== "" &&
-        this.addTime.endTime.value !== ""
-      ) {
-        return false;
-      } else {
-        return true;
-      }
+      return (
+        this.addTime.startTime == null ||
+        this.addTime.endTime == null ||
+        this.addTime.startTime.value == "" ||
+        this.addTime.endTime.value == ""
+      );
     },
   },
 };
