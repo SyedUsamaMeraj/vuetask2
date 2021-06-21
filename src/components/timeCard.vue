@@ -43,7 +43,7 @@
       <div class="mt-2 time-list">
         <div class="alert-msg">
           <b-alert
-            :variant="sameTime ? 'danger' : 'warning'"
+            :variant="sameTime ? 'danger' : invalidTime ? 'warning' : 'info'"
             show
             dismissible
             v-if="errorMessage"
@@ -84,6 +84,7 @@ export default {
       errorMessage: "",
       invalidTime: false,
       sameTime: false,
+      wrongSlot: false,
       timeList,
     };
   },
@@ -120,11 +121,20 @@ export default {
           item.endTime === this.addTime.endTime
       );
     },
+    checkBookSlots() {
+      return this.times.find((item) => this.addTime.startTime < item.endTime  && this.addTime.endTime > item.startTime);
+    },
     submitTime() {
       if (this.checkForExistance() !== undefined) {
         this.errorMessage = "Time Already Exists";
         this.sameTime = true;
         this.invalidTime = false;
+        this.wrongSlot = false;
+      } else if (this.checkBookSlots() !== undefined) {
+        this.errorMessage = "Time Slot Booked";
+        this.sameTime = false;
+        this.invalidTime = false;
+        this.wrongSlot = true;
       } else if (
         this.addTime.startTime > this.addTime.endTime ||
         this.addTime.startTime === this.addTime.endTime ||
@@ -134,14 +144,17 @@ export default {
         this.errorMessage = "Invalid Time Selected";
         this.invalidTime = true;
         this.sameTime = false;
+        this.wrongSlot = false;
       } else {
         this.times.push({
           startTime: this.addTime.startTime,
           endTime: this.addTime.endTime,
         });
+        console.log(this);
         this.errorMessage = "";
         this.invalidTime = false;
         this.sameTime = false;
+        this.wrongSlot = false;
       }
     },
     deleteTime(index) {
