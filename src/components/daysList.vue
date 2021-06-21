@@ -4,16 +4,15 @@
       <ul>
         <li v-for="day in daylist" :key="day.id" class="mt-3">
           <b-form-checkbox size="lg" :value="day" v-model="selectedDays">{{
-            day
+            day.name
           }}</b-form-checkbox>
         </li>
       </ul>
     </div>
 
-    <div class="cardsList flex">
-      <div class="cards" v-for="day in selectedDays" :key="day.id">
-        <h4>{{ day }}</h4>
-        <time-card></time-card>
+    <div class="flex cardsList">
+      <div class="cards" v-for="day in sortDay(selectedDays)" :key="day.name">
+        <time-card :dayName="day.name"></time-card>
       </div>
     </div>
   </div>
@@ -21,22 +20,27 @@
 
 <script>
 import timeCard from "./timeCard.vue";
+import { daylist } from "../constants.js";
 export default {
   components: { timeCard },
   data() {
     return {
       selectedDays: [],
-      day: "",
-      daylist: [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ],
+      daylist,
     };
+  },
+  methods: {
+    sortDay: function (day) {
+      return day.slice().sort(function (a, b) {
+        return a.value - b.value;
+      });
+    },
+    addDays() {
+      this.selectedDays.push({
+        value: this.daylist.value,
+        name: this.daylist.name,
+      });
+    },
   },
 };
 </script>
